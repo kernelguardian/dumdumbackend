@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from dotenv import load_dotenv
 
+load_dotenv()
 
 from models.model import URL
 from utils.util import is_youtube_url
