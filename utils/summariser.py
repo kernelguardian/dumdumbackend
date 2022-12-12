@@ -1,26 +1,37 @@
 from os import getenv
-from math import floor
 import openai
+from utils.util import split_every
 
 openai.api_key = getenv("openai")
 
-pretext = "The below text is a conversation, can you explain what it is about? if there are characters in this conversation mention about them. Generate a title and a summary  also"
+pretext = "The below text is a conversation,Generate a title and a summary. Can you explain what it is about? if there are characters in this conversation mention about them. Also make a list of important points and references for later use"
+
+n = 390
 
 
 def generate_summary(transcript):
-    transcript = transcript[:500]
-    prompt = pretext
-    for t in transcript:
-        prompt += " " + t
-    prompt += "\n"
-    # print(prompt)
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prompt,
-        temperature=0,
-        max_tokens=581,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0,
-    )
-    return response["choices"][0]["text"]
+    splitted_transcript = list(split_every(transcript, n))
+
+    response = []
+    for transcript_part in splitted_transcript:
+        prompt = pretext
+        for t in transcript_part:
+            prompt += " " + t
+            prompt += "\n"
+
+        response.append(
+            openai.Completion.create(
+                model="text-davinci-003",
+                prompt=prompt,
+                temperature=0,
+                max_tokens=581,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0,
+            )
+        )
+
+    final_response = ""
+    for r in response:
+        final_response += r["choices"][0]["text"]
+    return final_response
