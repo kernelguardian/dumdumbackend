@@ -13,7 +13,7 @@ from utils.summariser import generate_summary
 app = FastAPI()
 
 
-@app.get("/link")
+@app.post("/link")
 def link(url: URL):
     if is_youtube_url(url.url):
         status, transcript = yt_subtitle_fetcher(url.url, lang="en")
