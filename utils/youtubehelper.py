@@ -38,7 +38,7 @@ def yt_subtitle_fetcher(link: str, lang="en"):
 
 
 def subtitle_parser(subtitle):
-    transcript = ""
+    transcript = []
     for item in subtitle:
-        transcript = transcript + " " + item["text"]
+        transcript.append(item["text"])
     return transcript
