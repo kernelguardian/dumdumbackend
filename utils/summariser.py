@@ -1,2 +1,2 @@
-def generate_summary():
-    return "textsummary"
+def generate_summary(transcript):
+    return "summary  of " + transcript
