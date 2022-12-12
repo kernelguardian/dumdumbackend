@@ -15,14 +15,11 @@ app = FastAPI()
 def link(url: URL):
     if is_youtube_url(url.url):
         status, transcript = yt_subtitle_fetcher(url.url, lang="ml")
-
-        if status is False:
-            transcript = generate_transcript()
-        summary = generate_summary()
-        return JSONResponse(
-            content={"message": "OK", "status_code": 200, "data": summary}
-        )
     else:
         return JSONResponse(
             content={"message": "unprocessable url", "status_code": 422}
         )
+    if status is False:
+        transcript = generate_transcript()
+    summary = generate_summary(transcript)
+    return JSONResponse(content={"message": "OK", "status_code": 200, "data": summary})
