@@ -4,7 +4,9 @@ from utils.util import split_every
 
 openai.api_key = getenv("openai")
 
-pretext = "The below text is a youtube video transcript ,Generate a title and a summary. Can you explain what it is about? if there are characters in this conversation mention about them. Also make a list of important points and references for later use"
+pretext = "The below text is a youtube video transcript, Generate a title and a summary.Explain what it is about? if there are characters in this conversation mention about them. Also make a list of important points and references for later use"
+
+pretext_notitle = "The below text is a youtube video transcript, Generate a summary.Explain what it is about? if there are characters in this conversation mention about them. make a list of important points and references for later use"
 
 n = 100
 
@@ -14,7 +16,10 @@ def generate_summary(transcript):
     print(len(splitted_transcript))
     response = []
     for transcript_part in splitted_transcript:
-        prompt = pretext
+        if len(response) == 0:
+            prompt = pretext
+        else:
+            prompt = pretext_notitle
         for t in transcript_part:
             prompt += " " + t
             prompt += "\n"

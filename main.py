@@ -42,6 +42,7 @@ def link(url: URL):
     if status is False:
         transcript = generate_transcript()
     summary = generate_summary(transcript)
+    
     response_data = {}
     response_data["title"] = "title"
     response_data["summary"] = summary
