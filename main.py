@@ -42,4 +42,10 @@ def link(url: URL):
     if status is False:
         transcript = generate_transcript()
     summary = generate_summary(transcript)
-    return JSONResponse(content={"message": "OK", "status_code": 200, "data": summary})
+    response_data = {}
+    response_data["title"] = "title"
+    response_data["summary"] = summary
+    response_data["notes"] = ["notes", "2"]
+    return JSONResponse(
+        content={"message": "OK", "status_code": 200, "data": response_data}
+    )
