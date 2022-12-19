@@ -63,8 +63,7 @@ async def summarizer(url: URL):
         transcript = generate_transcript()
 
     formatted_transcript = minimizer(transcript)
-    # summary, openai_response = generate_summary(formatted_transcript)
-    summary, openai_response = "generate_summary(formatted_transcript)", {}
+    summary, openai_response = generate_summary(formatted_transcript)
 
     await insert_data(
         data={"link": url, "transcript": transcript, "response": openai_response}
@@ -90,9 +89,13 @@ async def query_summarizer(request_body: URL):
             request_body, request_body.user_query
         )
     )
+    is_youtube_link, video_id = youtube_link_parser(request_body.url)
 
-    if is_youtube_url(request_body.url):
-        status, transcript = yt_subtitle_fetcher(request_body.url, lang="en")
+    if is_youtube_link:
+        custom_url = "https://www.youtube.com/watch?v=" + video_id
+
+        status, transcript = yt_subtitle_fetcher(custom_url, lang="en")
+
     else:
         return response_handler(
             message="I am sorry this link is not supported at this moment or there is something wrong with the link, please try again with another link, psst try this link  https://www.youtube.com/watch?v=dQw4w9WgXcQ",
