@@ -26,7 +26,7 @@ from utils.supabase_handler import insert_data
 logger = MyLogger.__call__().get_logger()
 
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 origins = ["*"]
 
 app.add_middleware(
