@@ -60,4 +60,8 @@ def format_response(summary: str):
 
 
 def format_custom_response(summary: str):
-    return summary.replace("\n", "")
+    response_data = {}
+    response_data["title"] = ""
+    response_data["summary"] = summary.replace("\n", "")
+    response_data["points"] = ""
+    return response_data
