@@ -15,5 +15,9 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 async def insert_data(table_name="harvest", data={}):
     try:
         data = supabase.table(table_name).insert(data).execute()
-    except Exception:
-        logger.info("Supabase insertion error | {} | {}".format(data, table_name))
+    except Exception as err:
+        logger.info(
+            "Supabase insertion error | data:{} | table_name:{} | error:{}".format(
+                data, table_name, err
+            )
+        )

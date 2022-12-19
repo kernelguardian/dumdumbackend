@@ -49,12 +49,26 @@ async def summarizer(url: URL):
         custom_url = "https://www.youtube.com/watch?v=" + video_id
         status, transcript = yt_subtitle_fetcher(custom_url, lang="en")
     else:
+        await insert_data(
+            data={
+                "link": url.url,
+                "success": False,
+                "error_type": "link_not_supported",
+            }
+        )
         return response_handler(
             message="I am sorry this link is not supported at this moment or there is something wrong with the link, please try again with another link, psst try this link  https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             status_code=422,
         )
 
     if status is False:
+        await insert_data(
+            data={
+                "link": url.url,
+                "success": False,
+                "error_type": "no_transcript",
+            }
+        )
         return response_handler(
             message="Sorry, I am unable to process this video at this time, please check back soon, psst try this link  https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             status_code=422,
@@ -66,7 +80,7 @@ async def summarizer(url: URL):
     summary, openai_response = generate_summary(formatted_transcript)
 
     await insert_data(
-        data={"link": url, "transcript": transcript, "response": openai_response}
+        data={"link": url.url, "transcript": transcript, "response": openai_response}
     )
 
     try:
@@ -74,7 +88,15 @@ async def summarizer(url: URL):
         return response_handler(data=response_data)
     except Exception as err:
         logger.warn("Formatting Error| URL:{} | error:{}".format(url, err))
-
+        await insert_data(
+            data={
+                "link": url.url,
+                "transcript": transcript,
+                "response": openai_response,
+                "success": False,
+                "error_type": "formatting",
+            }
+        )
         return response_handler(
             message="Hmm, it looks like our bot messed something up, please try again",
             status_code=200,
@@ -97,12 +119,28 @@ async def query_summarizer(request_body: URL):
         status, transcript = yt_subtitle_fetcher(custom_url, lang="en")
 
     else:
+        await insert_data(
+            data={
+                "link": request_body.url,
+                "user_prompt": request_body.user_query,
+                "success": False,
+                "error_type": "link_not_supported",
+            }
+        )
         return response_handler(
             message="I am sorry this link is not supported at this moment or there is something wrong with the link, please try again with another link, psst try this link  https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             status_code=422,
         )
 
     if status is False:
+        await insert_data(
+            data={
+                "link": request_body.url,
+                "user_prompt": request_body.user_query,
+                "success": False,
+                "error_type": "no_transcript",
+            }
+        )
         return response_handler(
             message="Sorry, I am unable to process this video at this time, please check back soon, psst try this link  https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             status_code=422,

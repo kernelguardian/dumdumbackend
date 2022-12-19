@@ -22,7 +22,6 @@ def youtube_link_parser(value):
     if query.hostname == "youtu.be":
         return True, query.path[1:]
     if query.hostname in ("www.youtube.com", "youtube.com", "m.youtube.com"):
-        print("in")
         if query.path == "/watch":
             p = parse_qs(query.query)
             return True, p["v"][0]
