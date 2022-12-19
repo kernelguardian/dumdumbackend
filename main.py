@@ -69,8 +69,8 @@ async def summarizer(url: URL):
     try:
         response_data = format_response(summary)
         return response_handler(data=response_data)
-    except Exception:
-        logger.warn("Formatting Error| URL:{}".format(url))
+    except Exception as err:
+        logger.warn("Formatting Error| URL:{} | error:{}".format(url, err))
 
         return response_handler(
             message="Hmm, it looks like our bot messed something up, please try again",
