@@ -2,7 +2,7 @@ from pydantic import BaseModel, AnyUrl
 
 
 class URL(BaseModel):
-    url: AnyUrl
+    url: str
     user_query: str | None
 
 
