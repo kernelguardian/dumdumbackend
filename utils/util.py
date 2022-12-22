@@ -49,7 +49,7 @@ def split_every(iterable, n):
 
 
 def minimizer(transcript: List):
-    LIMIT = 3000
+    LIMIT = 2900
     text_transcript = " ".join(transcript)
     doc = nlp(text_transcript)
     filtered_tokens = [token.text for token in doc if not token.is_stop]
